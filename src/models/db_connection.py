@@ -9,7 +9,8 @@ def get_db_connection():
             user="root",
             password="676767",
             database="phonebook_db",
-            charset="utf8mb4"
+            charset="utf8mb4",
+            autocommit=False
         )
         if conn.is_connected():
             return conn

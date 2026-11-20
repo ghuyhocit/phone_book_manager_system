@@ -30,7 +30,7 @@ class UserModel:
         cursor = conn.cursor()
         try:
             hashed_pass = self.hash_password(password)
-            sql = "SELECT user_id, full_name, role FROM users WHERE email = %s AND password_hash = %s"
+            sql = "SELECT user_id, full_name, email, role FROM users WHERE email = %s AND password_hash = %s"
             cursor.execute(sql, (email, hashed_pass))
             user = cursor.fetchone()
             return user

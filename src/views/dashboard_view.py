@@ -10,7 +10,7 @@ class DashboardView:
         self.root.geometry("400x300")
 
         tk.Label(root, text=f"Xin chào, {user_data[1]}!", font=("Arial", 16, "bold")).pack(pady=30)
-        tk.Label(root, text=f"Role: {user_data[2]}").pack()
+        tk.Label(root, text=f"Role: {user_data[3]}").pack()
 
         tk.Button(root, text="Sửa hồ sơ cá nhân", command=self.open_profile, width=25).pack(pady=10)
         tk.Button(root, text="Quản lý danh bạ", width=25).pack(pady=5) 
