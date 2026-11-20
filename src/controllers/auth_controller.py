@@ -19,3 +19,9 @@ class AuthController:
             return user, "Đăng nhập thành công!"
         else:
             return None, "Invalid username or password."
+        
+    def handle_update_profile(self, user_id, full_name, phone, dob, address):
+        if not full_name or not phone or not dob or not address:
+            return False, "Vui lòng nhập đầy đủ thông tin!"
+        
+        return self.model.update_profile(user_id, full_name, phone, dob, address)
