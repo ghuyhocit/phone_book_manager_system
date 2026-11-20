@@ -27,8 +27,12 @@ class LoginView:
         
         user, msg = self.controller.handle_login(email, password)
         if user:
-            messagebox.showinfo("Thông báo", msg)
-            print("Đăng nhập OK. Tên:", user[1], "- Role:", user[2])
+            self.root.destroy()
+            import tkinter as tk
+            from src.views.dashboard_view import DashboardView
+            new_root = tk.Tk()
+            DashboardView(new_root, user)
+            new_root.mainloop()
         else:
             messagebox.showerror("Lỗi", msg)
 

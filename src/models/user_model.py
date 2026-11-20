@@ -32,11 +32,26 @@ class UserModel:
             hashed_pass = self.hash_password(password)
             sql = "SELECT user_id, full_name, role FROM users WHERE email = %s AND password_hash = %s"
             cursor.execute(sql, (email, hashed_pass))
-            user = cursor.fetchone() 
+            user = cursor.fetchone()
             return user
         except Exception as e:
             print("Lỗi login:", e)
             return None
+        finally:
+            cursor.close()
+            conn.close()
+
+    def update_profile(self, user_id, full_name, phone, dob, address):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        try:
+            sql = "UPDATE users SET full_name=%s, phone_number=%s, date_of_birth=%s, address=%s WHERE user_id=%s"
+            cursor.execute(sql, (full_name, phone, dob, address, user_id))
+            conn.commit()
+            return True, "Cập nhật hồ sơ thành công!"
+        except Exception as e:
+            conn.rollback()
+            return False, "Lỗi: " + str(e)
         finally:
             cursor.close()
             conn.close()
