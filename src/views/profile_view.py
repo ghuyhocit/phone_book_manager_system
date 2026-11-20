@@ -19,7 +19,7 @@ class ProfileView:
 
         tk.Label(top_win, text="Email (Không được sửa):").pack()
         email_entry = tk.Entry(top_win, state='readonly') 
-        email_entry.insert(0, "Email của bạn") 
+        email_entry.insert(0, user_data[2]) 
         email_entry.pack()
 
         tk.Label(top_win, text="Phone:").pack()
