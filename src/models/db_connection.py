@@ -1,19 +1,22 @@
+import os
 import mysql.connector
-from mysql.connector import Error
 
 def get_db_connection():
-    """Kết nối đến database phonebook_db"""
+    host = os.getenv("DB_HOST", "localhost")
+    user = os.getenv("DB_USER", "root")
+    password = os.getenv("DB_PASSWORD", "123456")
+    database = os.getenv("DB_NAME", "phonebook_db")
+    
     try:
         conn = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="676767",
-            database="phonebook_db",
+            host=host,
+            user=user,
+            password=password,
+            database=database,
             charset="utf8mb4",
             autocommit=False
         )
-        if conn.is_connected():
-            return conn
-    except Error as e:
-        print(f"Lỗi kết nối Database: {e}")
+        return conn
+    except mysql.connector.Error as err:
+        print(f"Lỗi kết nối Database: {err}")
         return None
