@@ -12,10 +12,18 @@ MIN_BIRTH_YEAR = 1900
 PHONE_PATTERN = re.compile(r"^\+?\d{8,15}$")
 
 
+def normalize_user(user):
+    """Chấp nhận user dạng dict hoặc dạng tuple (user_id, full_name, role)
+    như UserModel.login trả về."""
+    if isinstance(user, dict):
+        return user
+    return {"user_id": user[0], "full_name": user[1], "role": user[2]}
+
+
 class AdminController:
     def __init__(self, admin_user, view, model=None):
-        """admin_user: dict có user_id và role của người đang đăng nhập."""
-        self.admin = admin_user
+        """admin_user: dict hoặc tuple (user_id, full_name, role) của người đang đăng nhập."""
+        self.admin = normalize_user(admin_user)
         self.view = view
         self.model = model or AdminModel()
         self.page = 1
