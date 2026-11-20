@@ -6,6 +6,7 @@ def get_db_connection():
     user = os.getenv("DB_USER", "root")
     password = os.getenv("DB_PASSWORD", "123456")
     database = os.getenv("DB_NAME", "phonebook_db")
+    
     try:
         conn = mysql.connector.connect(
             host=host,
