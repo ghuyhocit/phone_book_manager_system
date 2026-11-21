@@ -78,11 +78,15 @@ class AdminModel:
             conn.close()
 
     # ---------- UC 23: Xóa người dùng ----------
-    def delete_user(self, user_id):
+    def delete_user(self, user_id, current_admin_id=None):
         """Xóa tài khoản; liên hệ và nhóm bị xóa theo nhờ ON DELETE CASCADE.
 
+        Admin không được tự xóa chính mình: nếu user_id trùng current_admin_id
+        thì ném ValueError và không xóa gì.
         Trả về True nếu đã xóa, False nếu không tồn tại.
         """
+        if current_admin_id is not None and user_id == current_admin_id:
+            raise ValueError("Admin không được tự xóa tài khoản của mình.")
         conn = self._open()
         try:
             cur = conn.cursor()
