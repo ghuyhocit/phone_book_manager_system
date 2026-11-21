@@ -13,11 +13,15 @@ PHONE_PATTERN = re.compile(r"^\+?\d{8,15}$")
 
 
 def normalize_user(user):
-    """Chấp nhận user dạng dict hoặc dạng tuple (user_id, full_name, role)
-    như UserModel.login trả về."""
+    """Chấp nhận user dạng dict hoặc dạng tuple như UserModel.login trả về:
+    (user_id, full_name, email, role) hoặc bản cũ (user_id, full_name, role).
+    Vai trò luôn là phần tử cuối của tuple."""
     if isinstance(user, dict):
         return user
-    return {"user_id": user[0], "full_name": user[1], "role": user[2]}
+    result = {"user_id": user[0], "full_name": user[1], "role": user[-1]}
+    if len(user) >= 4:
+        result["email"] = user[2]
+    return result
 
 
 class AdminController:
@@ -137,7 +141,7 @@ class AdminController:
                 "Thao tác không thể hoàn tác."):
             return
         try:
-            deleted = self.model.delete_user(user_id)
+            deleted = self.model.delete_user(user_id, self.admin.get("user_id"))
         except Exception as exc:
             self._db_error(exc)
             return
