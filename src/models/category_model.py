@@ -24,29 +24,31 @@ SORT_OPTIONS = {
 def get_groups(user_id):
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute(
-        "SELECT group_id, group_name FROM contact_groups "
-        "WHERE user_id = %s ORDER BY group_name",
-        (user_id,),
-    )
-    groups = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return groups
+    try:
+        cursor.execute(
+            "SELECT group_id, group_name FROM contact_groups "
+            "WHERE user_id = %s ORDER BY group_name",
+            (user_id,),
+        )
+        return cursor.fetchall()
+    finally:
+        cursor.close()
+        conn.close()
 
 
 def group_name_exists(user_id, name, exclude_id=0):
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute(
-        "SELECT group_id FROM contact_groups "
-        "WHERE user_id = %s AND group_name = %s AND group_id <> %s",
-        (user_id, name, exclude_id),
-    )
-    found = cursor.fetchone() is not None
-    cursor.close()
-    conn.close()
-    return found
+    try:
+        cursor.execute(
+            "SELECT group_id FROM contact_groups "
+            "WHERE user_id = %s AND group_name = %s AND group_id <> %s",
+            (user_id, name, exclude_id),
+        )
+        return cursor.fetchone() is not None
+    finally:
+        cursor.close()
+        conn.close()
 
 
 def create_group(user_id, name):
@@ -118,19 +120,20 @@ def delete_group(user_id, group_id):
 def get_groups_of_contact(user_id, contact_id):
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute(
-        "SELECT g.group_id, g.group_name "
-        "FROM contact_group_members m "
-        "JOIN contact_groups g ON g.group_id = m.group_id "
-        "JOIN contacts c ON c.contact_id = m.contact_id "
-        "WHERE m.contact_id = %s AND g.user_id = %s AND c.user_id = %s "
-        "ORDER BY g.group_name",
-        (contact_id, user_id, user_id),
-    )
-    groups = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return groups
+    try:
+        cursor.execute(
+            "SELECT g.group_id, g.group_name "
+            "FROM contact_group_members m "
+            "JOIN contact_groups g ON g.group_id = m.group_id "
+            "JOIN contacts c ON c.contact_id = m.contact_id "
+            "WHERE m.contact_id = %s AND g.user_id = %s AND c.user_id = %s "
+            "ORDER BY g.group_name",
+            (contact_id, user_id, user_id),
+        )
+        return cursor.fetchall()
+    finally:
+        cursor.close()
+        conn.close()
 
 
 def assign_contact_to_groups(user_id, contact_id, group_ids):
@@ -225,8 +228,9 @@ def search_contacts(user_id, keyword="", group_id=None, sort_key="name_asc",
 
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute(sql, tuple(params))
-    contacts = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return contacts
+    try:
+        cursor.execute(sql, tuple(params))
+        return cursor.fetchall()
+    finally:
+        cursor.close()
+        conn.close()
