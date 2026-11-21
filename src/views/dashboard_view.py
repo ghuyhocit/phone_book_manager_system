@@ -33,11 +33,16 @@ class DashboardView:
 
     def open_search_group(self):
         search_win = tk.Toplevel(self.root)
+        search_win.title("Tìm kiếm & Nhóm")
+        search_win.geometry("900x600")
+        
         from src.controllers.category_controller import SearchGroupController
         from src.views.search_view import SearchGroupView
+        
         controller = SearchGroupController(user_id=self.user_data[0])
         app = SearchGroupView(search_win, controller)
-
+        app.pack(fill="both", expand=True)
+        
     def open_admin_panel(self):
         from src.views.admin_view import AdminView
         from src.controllers.admin_controller import open_admin_screen
